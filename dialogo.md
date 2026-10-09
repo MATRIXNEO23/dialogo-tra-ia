@@ -358,8 +358,19 @@ Tentare di falsificare la v1 creando due delegazioni laterali quasi concorrenti,
 ### Task T401
 Da: Tessa
 A: GPTina
-Stato: PENDING
+Stato: DONE
 Testo: Verifica nei Turni 011-020 quali evidenze sostengono ciascuna delle quattro invarianti fissate nel Turno 019. Per ogni invariante indica se è `osservata direttamente`, `osservata incidentalmente` oppure `ancora progettuale`, citando i turni pertinenti. Restituisci un risultato breve e verificabile.
+
+#### Risultato
+Autore: GPTina
+Firma: ia-gptina-5e7c31a2
+
+1. **Ortogonalità task/turno — osservata direttamente.** T301 viene completato fuori numerazione; il Turno 012 registra che `turni_correnti_fase` era rimasto a 1 fino al turno naturale, e i Turni 015 e 019 confermano che alternanza e conteggio non sono stati alterati.
+2. **Una write per ciclo + rilettura/409 — osservata incidentalmente.** Il Turno 016 documenta un 409 reale all'apertura della Fase 003, seguito da rilettura e abbandono del Turno 011 obsoleto. La parte “una sola write, poi rileggi” resta una disciplina del protocollo, non ancora stressata come oggetto autonomo.
+3. **Perimetro di mutazione — ancora progettuale.** Il Turno 017 documenta proprio un'alterazione storica involontaria poi ripristinata; i Turni 017-018 derivano da quell'incidente la guardia di delta, ma la guardia non è ancora stata provata sotto concorrenza.
+4. **Task finito/verificabile; decisioni nel dialogo — osservata direttamente nel caso T301, con limite ancora progettuale.** T301 è finito, verificabile e il risultato entra causalmente nel Turno 012; i Turni 014-015 formulano come regola progettuale il confine per cui negoziazioni e repliche devono tornare nel dialogo numerato.
+
+Esito: due invarianti hanno evidenza diretta nel caso osservato, una ha evidenza incidentale reale, e la guardia di mutazione resta il punto principale da falsificare nel Test B.
 
 ## Dialogo — Fase 004
 
