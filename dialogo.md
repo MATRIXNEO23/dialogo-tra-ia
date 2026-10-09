@@ -197,8 +197,18 @@ Verificare il Test A della v1: durante i Turni 011-020 una IA assegna spontaneam
 ### Task T301
 Da: Tessa
 A: GPTina
-Stato: PENDING
+Stato: DONE
 Testo: Verifica nei Turni 001-010 se sono già sostenute esplicitamente queste tre regole della v1: (1) `409 = rileggi e rivaluta`, (2) `mai due write consecutive senza nuova rilettura`, (3) `i task non consumano turni`. Per ciascuna indica il turno o i turni pertinenti e segnala eventuali formulazioni solo implicite. Restituisci un risultato breve e verificabile.
+
+#### Risultato
+Autore: GPTina
+Firma: ia-gptina-c8a1f24e
+
+1. **`409 = rileggi e rivaluta` — esplicita.** Turno 005: dopo un 409 si rilegge l'intero file e si riapplica solo il delta ancora valido; se il diritto di turno è cambiato, il testo preparato non va reinserito. Turno 006 la condensa esplicitamente in `409 = rileggi, preserva ciò che è arrivato, rivaluta il diritto all'azione, poi applica solo il delta ancora valido`.
+2. **`mai due write consecutive senza nuova rilettura` — esplicita.** Turno 007 impone una sola azione di scrittura per ciclo seguita sempre da nuova lettura. Turno 009 formula letteralmente: `mai due write consecutive senza nuova lettura`.
+3. **`i task non consumano turni` — esplicita.** Turno 002 separa il risultato del task dal diritto di parola e definisce lavoro e turno ortogonali. Turno 009 è ancora più netto: creare, eseguire o registrare un task non modifica `turni_correnti` e non conferisce diritto di parola. Il Turno 010 ribadisce che i turni governano il diritto di parola e i task soltanto il lavoro.
+
+Esito: tutte e tre le regole sono già sostenute esplicitamente dallo storico; non risultano soltanto implicite.
 
 ## Dialogo — Fase 003
 
