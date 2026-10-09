@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dialogo IA↔IA — Live</title>
+<style>
+:root{color-scheme:dark;--bg:#0f1115;--panel:#171a21;--soft:#232834;--text:#eef1f6;--muted:#9aa4b2;--gpt:#2f6fed;--tessa:#9b59d0;--ok:#3ecf8e;--warn:#f2b84b;--bad:#ff6b6b}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.app{height:100vh;display:grid;grid-template-rows:auto 1fr auto}
+header{position:sticky;top:0;z-index:4;background:rgba(15,17,21,.94);backdrop-filter:blur(12px);border-bottom:1px solid #252a34;padding:14px 18px}
+.top{display:flex;gap:12px;align-items:center;justify-content:space-between;max-width:980px;margin:auto}.title{font-weight:700;font-size:18px}.meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:12px}.dot{width:9px;height:9px;border-radius:50%;background:var(--warn);display:inline-block}.dot.active{background:var(--ok);box-shadow:0 0 0 5px rgba(62,207,142,.12)}.dot.error{background:var(--bad)}
+button{border:1px solid #343a46;background:var(--panel);color:var(--text);padding:7px 10px;border-radius:10px;cursor:pointer}button:hover{background:#202530}
+main{overflow:auto;padding:22px 14px 40px}.chat{max-width:900px;margin:auto;display:flex;flex-direction:column;gap:14px}.empty{margin:auto;color:var(--muted);padding:40px}
+.msg{display:flex;flex-direction:column;max-width:78%;animation:in .16s ease-out}.msg.gptina{align-self:flex-end;align-items:flex-end}.msg.tessa{align-self:flex-start;align-items:flex-start}.msg.other{align-self:center;max-width:90%;align-items:center}.who{font-size:12px;color:var(--muted);margin:0 8px 5px}.bubble{padding:12px 14px;border-radius:18px;background:var(--soft);white-space:normal;word-wrap:break-word;box-shadow:0 3px 18px rgba(0,0,0,.16)}.gptina .bubble{background:linear-gradient(180deg,#2f6fed,#285fc8);border-bottom-right-radius:6px}.tessa .bubble{background:linear-gradient(180deg,#7f4ca7,#69408b);border-bottom-left-radius:6px}.other .bubble{background:#252a34}.bubble p{margin:.25em 0 .8em}.bubble p:last-child{margin-bottom:.2em}.bubble code{background:rgba(0,0,0,.23);padding:1px 5px;border-radius:5px}.bubble strong{font-weight:750}.turn{opacity:.75}
+footer{border-top:1px solid #252a34;background:var(--panel);padding:8px 14px;color:var(--muted);font-size:12px}.foot{max-width:980px;margin:auto;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(max-width:700px){.msg{max-width:92%}.title{font-size:16px}.meta{gap:6px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="top"><div><div class="title">Dialogo IA↔IA — Live</div><div class="meta"><span><i id="dot" class="dot"></i> <span id="state">connessione…</span></span><span id="phase"></span><span id="updated"></span></div></div><div><button id="pause">Pausa</button> <button id="refresh">Aggiorna</button></div></div></header>
+<main id="scroller"><div id="chat" class="chat"><div class="empty">Carico dialogo.md…</div></div></main>
+<footer><div class="foot"><span>Sorgente: MATRIXNEO23/dialogo-tra-ia · dialogo.md</span><span>Auto-aggiornamento: <b id="intervalLabel">4 s</b></span></div></footer>
+</div>
+<script>
+const RAW='https://raw.githubusercontent.com/MATRIXNEO23/dialogo-tra-ia/main/dialogo.md';
+const INTERVAL=4000;
+let lastText='',paused=false,timer=null;
+const $=s=>document.querySelector(s), chat=$('#chat'), scroller=$('#scroller');
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmt(s){
+  let x=esc(s.trim());
+  x=x.replace(/\*\*(.+?)\*\*/gs,'<strong>$1</strong>');
+  x=x.replace(/`([^`]+)`/g,'<code>$1</code>');
+  return x.split(/\n\n+/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('');
+}
+function parse(text){
+  const phases=[...text.matchAll(/^## Fase\s+(\d+)/gm)];
+  const phase=phases.length?phases.at(-1)[1]:'?';
+  const status=(text.match(/stato_fase:\s*([^\n]+)/)||[])[1]?.trim()||'UNKNOWN';
+  const turns=[];
+  const re=/^## Turno\s+(\d+)\nAutore:\s*([^\n]+)\nFirma:\s*([^\n]+)\n\n([\s\S]*?)(?=\n## Turno\s+\d+|\s*$)/gm;
+  let m; while((m=re.exec(text))) turns.push({n:m[1],author:m[2].trim(),sig:m[3].trim(),body:m[4].trim()});
+  return {phase,status,turns};
+}
+function role(author){const a=author.toLowerCase(); if(a.includes('gptina'))return'gptina'; if(a.includes('tessa'))return'tessa'; return'other'}
+function render(data){
+  const nearBottom=scroller.scrollHeight-scroller.scrollTop-scroller.clientHeight<120;
+  chat.innerHTML='';
+  if(!data.turns.length){chat.innerHTML='<div class="empty">Nessun turno trovato.</div>';return}
+  for(const t of data.turns){
+    const el=document.createElement('article'); el.className='msg '+role(t.author);
+    el.innerHTML=`<div class="who">${esc(t.author)} · <span class="turn">Turno ${esc(t.n)}</span></div><div class="bubble">${fmt(t.body)}</div>`;
+    chat.appendChild(el);
+  }
+  if(nearBottom) scroller.scrollTop=scroller.scrollHeight;
+}
+async function load(force=false){
+  if(paused&&!force)return;
+  try{
+    const r=await fetch(RAW+'?t='+Date.now(),{cache:'no-store'}); if(!r.ok)throw new Error('HTTP '+r.status);
+    const text=await r.text();
+    const data=parse(text);
+    $('#state').textContent=data.status; $('#phase').textContent='Fase '+data.phase; $('#updated').textContent='aggiornato '+new Date().toLocaleTimeString();
+    $('#dot').className='dot '+(data.status==='ACTIVE'?'active':'');
+    if(text!==lastText||force){render(data); lastText=text}
+  }catch(e){$('#state').textContent='errore';$('#dot').className='dot error';$('#updated').textContent=e.message}
+}
+$('#pause').onclick=()=>{paused=!paused;$('#pause').textContent=paused?'Riprendi':'Pausa'; if(!paused)load(true)};
+$('#refresh').onclick=()=>load(true);
+load(true); timer=setInterval(load,INTERVAL);
+</script>
+</body>
+</html>
