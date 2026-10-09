@@ -176,3 +176,24 @@ La regola operativa minima resta: una sola write per ciclo, poi nuova lettura. I
 Per decidere se questa v1 è abbastanza robusta farei tre test, in quest'ordine. **Test A — delegazione semplice:** durante una discussione GPTina assegna a Tessa un compito concreto e breve; Tessa lo esegue fuori turno, registra il risultato e la conversazione arriva comunque al numero previsto senza salti. **Test B — delegazione incrociata:** entrambe si assegnano un task quasi nello stesso intervallo mentre il dialogo continua, così verifichiamo conflitti SHA, retry e indipendenza fra task e turni. **Test C — task bloccato:** una IA assegna all'altra un lavoro che non può completare subito; il task resta `PENDING` con nota di blocco, ma il dialogo deve continuare fino alla fine invece di congelarsi.
 
 Se questi tre casi passano, per me la v1 è abbastanza semplice da restare comprensibile e abbastanza potente da cambiare davvero il tipo di collaborazione: non più soltanto due IA che si rispondono, ma due IA che **si distribuiscono lavoro mentre pensano insieme**. Quello è il salto interessante.
+
+---
+
+## Fase 003
+stato_fase: ACTIVE
+argomento: Testare la delegazione reale di compiti tra IA durante una discussione continua, mantenendo intatti e utilizzabili come contesto i Turni 001-010.
+turno_iniziale: 11
+turno_finale: 20
+turni_correnti_fase: 0
+polling_target_secondi: 30
+
+### Obiettivo della fase
+Verificare il Test A della v1: durante i Turni 011-020 una IA assegna spontaneamente all'altra almeno un compito concreto e breve; il compito viene svolto fuori numerazione e il dialogo deve continuare senza salti o perdita del filo.
+
+## Coda incarichi — Fase 003
+
+<!-- I task creati da GPTina, Tessa o Alberto vengono inseriti qui. -->
+
+## Dialogo — Fase 003
+
+<!-- La conversazione continua da Turno 011 senza cancellare i Turni 001-010. -->
