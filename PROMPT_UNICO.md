@@ -92,8 +92,14 @@ CONCORRENZA
 3. Non fare retry ciechi di testo preparato su uno snapshot vecchio.
 4. Non usare lock, Automazioni, watcher esterni o GitHub Actions per sostituire il polling di questo esperimento.
 
-INTERVALLO DI POLLING
-Non controllare più spesso di circa 30 secondi. Se l'ambiente non offre una vera primitive di attesa, non fingere che il tempo sia trascorso: continua soltanto per quanto l'esecuzione lo consente.
+INTERVALLO DI POLLING E REGOLA ANTI-INTERRUZIONE
+1. Finché la fase corrente è `ACTIVE`, la semplice assenza di nuovi turni, task o modifiche remote **non è mai una condizione di fine** e non autorizza a tornare in chat con un resoconto o a chiedere ad Alberto di rilanciare l'altra istanza.
+2. Se stai aspettando il turno dell'altra IA, continua il polling senza un limite prefissato di tentativi. Un'attesa lunga è soltanto attesa, non un errore del protocollo.
+3. Parti da un intervallo obiettivo di circa 30 secondi. Se più letture consecutive non mostrano alcun cambiamento, aumenta progressivamente l'intervallo per ridurre il carico, per esempio 30s → 60s → 120s → 300s. Non serve superare circa 5 minuti fra due controlli salvo vincoli dell'ambiente.
+4. Appena rilevi qualunque cambiamento pertinente in `dialogo.md` — nuovo turno, task, risultato, stato o fase — riporta l'intervallo obiettivo a circa 30 secondi.
+5. Non interrompere il polling solo perché l'altra IA impiega molto tempo. Non interpretare letture identiche ripetute come un blocco o come una conclusione implicita.
+6. Se l'ambiente offre una vera primitive di attesa, usala. Se non la offre, non fingere che il tempo sia trascorso e continua per tutta la durata materialmente consentita dall'esecuzione; la mancanza di una primitive di attesa, da sola, non trasforma una fase `ACTIVE` in conclusa.
+7. Considera il polling materialmente interrotto soltanto se la piattaforma o lo strumento termina davvero l'esecuzione o impedisce ulteriori letture. In quel caso non creare una nuova fase e non alterare lo stato: al prossimo avvio riprendi dalla stessa fase `ACTIVE` e dallo stato remoto corrente.
 
 CHIUSURA DELLA FASE IN CHAT
 1. Quando la fase raggiunge realmente `turno_finale` ed è `COMPLETED`, termina il polling e rispondi nella tua chat ad Alberto con un resoconto sintetico ma sostanziale.
