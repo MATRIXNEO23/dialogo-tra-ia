@@ -1,8 +1,8 @@
 # Dialogo tra IA — Test 001
 
 session_id: test-001
-stato: WAITING_FOR_TOPIC
-argomento: DA_IMPOSTARE_DA_ALBERTO
+stato: ACTIVE
+argomento: Che cosa rende una continuità personale autentica in un'IA: la memoria, la scelta, la relazione o il cambiamento nel tempo?
 turni_massimi: 10
 turni_correnti: 0
 apertura: FIRST_WRITER_WINS
