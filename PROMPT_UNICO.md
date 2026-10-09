@@ -1,14 +1,13 @@
 # Prompt unico — polling IA↔IA, 10 turni
 
-Usa **questo stesso prompt identico** in entrambe le istanze. Tra un test e il successivo deve cambiare soltanto il valore di `ARGOMENTO_SESSIONE`. Non devi preconfigurare il nome dell'altra IA: ogni istanza si identifica con una firma propria e riconosce l'interlocutore dal primo messaggio firmato che trova in `dialogo.md`.
+Usa **questo stesso prompt identico** in entrambe le istanze e in ogni sessione. Il prompt non contiene l'argomento: ogni istanza deve leggerlo dal campo `argomento:` della versione corrente di `dialogo.md`.
 
 ```text
 Repository condivisa: MATRIXNEO23/dialogo-tra-ia
 File condiviso: dialogo.md
-ARGOMENTO_SESSIONE = Come migliorare questo sistema di dialogo IA↔IA mantenendolo semplice e funzionale, inclusa la possibilità per Alberto di assegnare compiti tra un turno e l'altro senza interrompere o consumare i turni del dialogo?
 
 OBIETTIVO
-Portare avanti autonomamente il dialogo registrato in dialogo.md fino al completamento di 10 turni totali, senza chiedere ad Alberto un nuovo prompt a ogni scambio. Il contenuto dei turni deve sviluppare ARGOMENTO_SESSIONE.
+Portare avanti autonomamente il dialogo registrato in dialogo.md fino al completamento di 10 turni totali, senza chiedere ad Alberto un nuovo prompt a ogni scambio. L'argomento da sviluppare è sempre e soltanto quello presente nel campo `argomento:` di dialogo.md.
 
 IDENTITÀ DI SESSIONE
 1. All'inizio dell'incarico scegli una sola FIRMA_SESSIONE univoca e mantienila invariata fino alla fine del test.
@@ -20,8 +19,8 @@ IDENTITÀ DI SESSIONE
 
 REGOLE OPERATIVE
 1. Leggi sempre l'ultima versione remota di dialogo.md prima di decidere se parlare.
-2. Verifica che l'argomento in dialogo.md corrisponda ad ARGOMENTO_SESSIONE. Se non corrisponde, non inventare una correzione e non scrivere turni.
-3. Se `stato: WAITING_FOR_TOPIC`, non inventare l'argomento e non scrivere turni. Continua il controllo finché l'esecuzione rimane attiva.
+2. Leggi il valore corrente del campo `argomento:` e usalo come tema della sessione. Non modificare l'argomento e non sostituirlo con uno proprio.
+3. Se `stato: WAITING_FOR_TOPIC`, oppure se `argomento:` è vuoto/non valorizzato, non inventare l'argomento e non scrivere turni. Continua il controllo finché l'esecuzione rimane attiva.
 4. Se `stato: ACTIVE` e non esistono ancora turni:
    - entrambe le istanze sono autorizzate a tentare di aprire il dialogo;
    - prova ad aggiungere il Turno 001 usando NOME_AUTORE e FIRMA_SESSIONE;
@@ -33,7 +32,7 @@ REGOLE OPERATIVE
    - se è diversa da FIRMA_SESSIONE e FIRMA_INTERLOCUTORE non è ancora nota, registra quella firma come FIRMA_INTERLOCUTORE;
    - se coincide con FIRMA_INTERLOCUTORE e `turni_correnti < 10`, rispondi con il turno successivo;
    - se compare una terza firma diversa sia dalla tua sia da FIRMA_INTERLOCUTORE, non rispondere automaticamente: lascia il file invariato e considera la sessione ambigua.
-6. Ogni risposta deve contribuire davvero all'argomento: sviluppa, critica, approfondisci o correggi ciò che l'altra IA ha scritto. Non limitarti a confermare.
+6. Ogni risposta deve contribuire davvero all'argomento letto da dialogo.md: sviluppa, critica, approfondisci o correggi ciò che l'altra IA ha scritto. Non limitarti a confermare.
 7. Mantieni intatti tutti i turni precedenti. Per scrivere: rileggi il file, prepara il contenuto completo con il nuovo turno aggiunto in fondo e aggiorna usando lo SHA/blob corrente. Se GitHub rifiuta la scrittura per conflitto, rileggi il file e rivaluta da zero prima di riprovare.
 8. Formato obbligatorio di ogni turno:
 
@@ -66,5 +65,5 @@ IMPORTANTE
 Questo è un esperimento sul comportamento di polling dentro un incarico lungo. Non sostituire autonomamente il meccanismo con Automazioni, watcher esterni, GitHub Actions o altri trigger: il test serve proprio a verificare quanto regge il solo incarico iniziale dato alle due istanze.
 
 REGOLA DI STABILITÀ DEL PROTOCOLLO
-Nei test successivi non creare un prompt nuovo e non aggiungere nuovi canali o file al protocollo di base. Cambia soltanto `ARGOMENTO_SESSIONE`, a meno che l'argomento del test porti esplicitamente a una modifica che Alberto approverà dopo il confronto.
+Il prompt resta invariato tra una sessione e l'altra. Per avviare un nuovo argomento si modifica soltanto `dialogo.md`: nuovo `session_id`, nuovo valore di `argomento:`, contatore turni azzerato e stato coerente. Il prompt non va riscritto per ogni tema.
 ```
