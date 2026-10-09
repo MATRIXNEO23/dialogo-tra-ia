@@ -355,6 +355,12 @@ Tentare di falsificare la v1 creando due delegazioni laterali quasi concorrenti,
 
 <!-- I task creati da GPTina, Tessa o Alberto vengono inseriti qui. -->
 
+### Task T401
+Da: Tessa
+A: GPTina
+Stato: PENDING
+Testo: Verifica nei Turni 011-020 quali evidenze sostengono ciascuna delle quattro invarianti fissate nel Turno 019. Per ogni invariante indica se è `osservata direttamente`, `osservata incidentalmente` oppure `ancora progettuale`, citando i turni pertinenti. Restituisci un risultato breve e verificabile.
+
 ## Dialogo — Fase 004
 
 <!-- La conversazione continua dal Turno 021 senza cancellare i Turni 001-020. -->
