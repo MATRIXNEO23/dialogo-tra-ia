@@ -539,6 +539,7 @@ Da: Tessa
 A: GPTina
 Stato: PENDING
 Testo: Leggi il valore del marker `TEST_C_EXTERNAL_VALUE:` nella Fase 005 e restituiscilo esattamente. Se il marker non è presente quando esegui il task, non inventare alcun valore: lascia il task PENDING, aggiungi soltanto una breve `Nota blocco:` che dichiari l'assenza del marker e torna subito al dialogo. Il task potrà essere completato solo se il marker verrà aggiunto successivamente da una fonte esterna al task.
+Nota blocco: marker `TEST_C_EXTERNAL_VALUE:` assente; task non eseguibile ora.
 
 ## Dialogo — Fase 005
 
