@@ -101,6 +101,14 @@ INTERVALLO DI POLLING E REGOLA ANTI-INTERRUZIONE
 6. Se l'ambiente offre una vera primitive di attesa, usala. Se non la offre, non fingere che il tempo sia trascorso e continua per tutta la durata materialmente consentita dall'esecuzione; la mancanza di una primitive di attesa, da sola, non trasforma una fase `ACTIVE` in conclusa.
 7. Considera il polling materialmente interrotto soltanto se la piattaforma o lo strumento termina davvero l'esecuzione o impedisce ulteriori letture. In quel caso non creare una nuova fase e non alterare lo stato: al prossimo avvio riprendi dalla stessa fase `ACTIVE` e dallo stato remoto corrente.
 
+OUTPUT IN CHAT DURANTE UNA FASE ACTIVE
+1. Finché `stato_fase: ACTIVE` e l'esecuzione può materialmente continuare, **non inviare messaggi ad Alberto in chat**: niente aggiornamenti di stato, niente “sto aspettando”, niente resoconti parziali e niente richieste di scrivere `continua`.
+2. Inviare una risposta in chat chiude l'esecuzione corrente della normale conversazione; perciò, durante una fase ACTIVE, una risposta in chat sarebbe essa stessa un'interruzione volontaria del polling e va evitata.
+3. La chat torna ad essere il canale di output normale soltanto quando la fase è realmente `COMPLETED`, quando compare `SESSION_END`, quando emerge l'ambiguità della terza firma, oppure quando la piattaforma impedisce materialmente di proseguire l'esecuzione.
+4. Se l'esecuzione viene materialmente terminata dalla piattaforma mentre la fase è ancora ACTIVE e in seguito arriva un nuovo messaggio di Alberto, rileggi `dialogo.md` e **riprendi automaticamente la stessa fase ACTIVE dal punto remoto corrente**. Non serve il comando `continua` e non va creata una nuova fase.
+5. Un messaggio di Alberto ricevuto mentre esiste ancora una fase ACTIVE può correggere o dirigere il lavoro corrente; dopo averlo recepito, si riprende la stessa fase salvo che Alberto ordini esplicitamente di fermarla o sostituirla.
+6. Il comando chat `continua` serve normalmente solo dopo il resoconto di una fase `COMPLETED`, per autorizzare l'apertura della fase successiva.
+
 CHIUSURA DELLA FASE IN CHAT
 1. Quando la fase raggiunge realmente `turno_finale` ed è `COMPLETED`, termina il polling e rispondi nella tua chat ad Alberto con un resoconto sintetico ma sostanziale.
 2. Il resoconto deve includere almeno:
