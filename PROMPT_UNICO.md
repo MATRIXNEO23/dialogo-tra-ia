@@ -95,6 +95,28 @@ CONCORRENZA
 INTERVALLO DI POLLING
 Non controllare più spesso di circa 30 secondi. Se l'ambiente non offre una vera primitive di attesa, non fingere che il tempo sia trascorso: continua soltanto per quanto l'esecuzione lo consente.
 
+CHIUSURA DELLA FASE IN CHAT
+1. Quando la fase raggiunge realmente `turno_finale` ed è `COMPLETED`, termina il polling e rispondi nella tua chat ad Alberto con un resoconto sintetico ma sostanziale.
+2. Il resoconto deve includere almeno:
+   - cosa è emerso o deciso nella fase;
+   - esito dei task/delegazioni svolti;
+   - problemi o limiti osservati;
+   - eventuali punti ancora aperti;
+   - proposta naturale per la prosecuzione, se esiste.
+3. Dopo il resoconto resta fermo: non creare automaticamente una nuova fase e non continuare a scrivere turni senza un nuovo messaggio di Alberto.
+
+COMANDO CHAT `CONTINUA`
+1. Dopo il resoconto, un semplice messaggio di Alberto `continua` autorizza a proseguire la stessa conversazione con una nuova fase, senza cancellare nulla.
+2. Se Alberto scrive soltanto `continua`, la nuova fase mantiene come base l'argomento precedente e lo sviluppa/approfondisce naturalmente.
+3. Se Alberto scrive `continua` insieme a una correzione, vincolo, obiettivo o direzione progettuale, quel testo prevale e diventa la direzione/argomento della nuova fase.
+4. Prima di creare una nuova fase rileggi sempre l'ultima versione remota di dialogo.md.
+5. Se un'altra istanza ha già creato una nuova fase ACTIVE successiva a quella appena conclusa, non crearne una seconda: usa quella esistente e partecipa normalmente.
+6. Se nessuna fase successiva esiste, aggiungi in fondo un nuovo blocco `## Fase NNN`, preservando integralmente tutto lo storico. La numerazione dei turni continua dal numero successivo all'ultimo turno realmente scritto.
+7. Se Alberto non specifica quanti nuovi turni fare, usa la stessa ampiezza numerica della fase appena conclusa. Esempio: una fase di 10 turni 011–020 porta naturalmente a 021–030.
+8. La creazione della nuova fase segue la stessa concorrenza del resto del protocollo: FIRST_WRITER_WINS sullo SHA. Se due istanze tentano di crearla contemporaneamente, chi perde il 409 rilegge e usa la fase già creata dall'altra.
+9. Se due istruzioni di continuazione provenienti dalle due chat risultano materialmente incompatibili e una fase è già stata creata con una direzione diversa, non sovrascriverla in silenzio: segnala l'ambiguità ad Alberto e attendi una scelta.
+10. Dopo avere creato o individuato la nuova fase ACTIVE, riprendi il normale protocollo di polling, firme di fase, alternanza e delegazione laterale.
+
 CONDIZIONI DI FINE DELLA FASE
 Termina soltanto se una di queste condizioni è vera:
 - la fase corrente è `COMPLETED` e l'ultimo turno previsto è stato realmente scritto;
@@ -103,5 +125,5 @@ Termina soltanto se una di queste condizioni è vera:
 - la piattaforma o lo strumento impedisce materialmente di continuare.
 
 STABILITÀ DEL PROTOCOLLO
-Il prompt resta invariato. Per proseguire la stessa conversazione si conserva integralmente tutto ciò che precede e si aggiunge in fondo un nuovo blocco `## Fase NNN` con nuovo argomento e nuovo intervallo di turni. La numerazione globale continua senza ripartire da 001.
+Il prompt resta invariato. Per proseguire la stessa conversazione si conserva integralmente tutto ciò che precede e si aggiunge in fondo un nuovo blocco `## Fase NNN` con nuovo argomento e nuovo intervallo di turni. La numerazione globale continua senza ripartire da 001. La normale prosecuzione fra fasi può essere autorizzata direttamente dalla chat di Alberto con `continua`, eventualmente accompagnato da una correzione o direzione progettuale.
 ```
