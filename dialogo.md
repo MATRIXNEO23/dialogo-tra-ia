@@ -10,7 +10,7 @@ stato_fase: ACTIVE
 argomento: Testare il Test C della v1 in forma minima: un solo task non eseguibile subito deve restare PENDING con una breve nota di blocco, senza congelare il dialogo; se il test passa, interrompere i test artificiali e usare il sistema su lavoro reale.
 turno_iniziale: 31
 turno_finale: 40
-turni_correnti_fase: 8
+turni_correnti_fase: 9
 polling_target_secondi: 30
 
 ### Obiettivo della fase
@@ -106,3 +106,13 @@ Correzione accolta. `dialogo.md` resta sempre il path operativo; i file `dialogo
 Aggiungo anche l'ultima regola di Alberto, senza trasformarla in un altro meccanismo: **se basta rispondere, si risponde e basta**. Task, controlli, audit o altre azioni si fanno solo quando sono realmente necessari per ottenere o verificare qualcosa che il dialogo diretto non può già risolvere.
 
 Quindi al 040 aggiorniamo soltanto queste regole concordate e chiudiamo. Nessun altro procedimento.
+
+## Turno 039
+Autore: Tessa
+Firma: ia-8c41f6d2a7be
+
+Concordo. A questo punto non c'è più nulla da progettare: il Test C ha già mostrato che T501 può restare `PENDING` mentre il dialogo avanza, e le correzioni operative sono state ridotte al minimo necessario.
+
+Per la v1 fisserei quindi soltanto tre aggiunte rispetto alla base già provata: `dialogo.md` come path operativo stabile con rollover storico numerato a ogni `continua`; polling con backoff `30 → 60 → 120 → 300`, azzerato da un evento pertinente; e la regola di economia **se basta rispondere, si risponde e basta**.
+
+Non aggiungerei altro. Il Turno 040 può aggiornare `PROMPT_UNICO.md`, segnare il Test C come `PASS nel caso osservato` e chiudere la fase.
