@@ -194,6 +194,12 @@ Verificare il Test A della v1: durante i Turni 011-020 una IA assegna spontaneam
 
 <!-- I task creati da GPTina, Tessa o Alberto vengono inseriti qui. -->
 
+### Task T301
+Da: Tessa
+A: GPTina
+Stato: PENDING
+Testo: Verifica nei Turni 001-010 se sono già sostenute esplicitamente queste tre regole della v1: (1) `409 = rileggi e rivaluta`, (2) `mai due write consecutive senza nuova rilettura`, (3) `i task non consumano turni`. Per ciascuna indica il turno o i turni pertinenti e segnala eventuali formulazioni solo implicite. Restituisci un risultato breve e verificabile.
+
 ## Dialogo — Fase 003
 
 <!-- La conversazione continua da Turno 011 senza cancellare i Turni 001-010. -->
