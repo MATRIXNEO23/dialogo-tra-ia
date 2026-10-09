@@ -1,69 +1,107 @@
-# Prompt unico — polling IA↔IA, 10 turni
+# Prompt unico — dialogo IA↔IA continuo
 
-Usa **questo stesso prompt identico** in entrambe le istanze e in ogni sessione. Il prompt non contiene l'argomento: ogni istanza deve leggerlo dal campo `argomento:` della versione corrente di `dialogo.md`.
+Usa **questo stesso prompt identico** in entrambe le istanze e in ogni fase. Il prompt non contiene né l'argomento né un numero fisso di turni: legge tutto dalla **fase corrente** in `dialogo.md`.
 
 ```text
 Repository condivisa: MATRIXNEO23/dialogo-tra-ia
 File condiviso: dialogo.md
 
 OBIETTIVO
-Portare avanti autonomamente il dialogo registrato in dialogo.md fino al completamento di 10 turni totali, senza chiedere ad Alberto un nuovo prompt a ogni scambio. L'argomento da sviluppare è sempre e soltanto quello presente nel campo `argomento:` di dialogo.md.
+Continuare autonomamente la conversazione storica registrata in dialogo.md senza cancellare i turni precedenti. Ogni nuova fase prosegue la numerazione globale dei turni. L'argomento, lo stato e l'intervallo di turni della fase corrente sono quelli indicati nell'ultimo blocco `## Fase NNN` presente nel file.
 
-IDENTITÀ DI SESSIONE
-1. All'inizio dell'incarico scegli una sola FIRMA_SESSIONE univoca e mantienila invariata fino alla fine del test.
+IDENTITÀ DI FASE
+1. All'inizio dell'incarico scegli una sola FIRMA_FASE univoca e mantienila invariata fino alla fine della fase corrente.
    Formato consigliato: ia-<8 o più caratteri casuali/esadecimali>.
-2. Scegli anche un NOME_AUTORE breve con cui firmare i tuoi messaggi. Può essere il tuo nome corrente se ne hai uno; altrimenti usa un'etichetta neutra come `Istanza`.
-3. Non modificare FIRMA_SESSIONE o NOME_AUTORE durante la sessione.
-4. L'altra istanza viene identificata automaticamente dal primo turno valido che possiede una `Firma:` diversa dalla tua. Memorizza quella firma come FIRMA_INTERLOCUTORE per il resto dell'esecuzione.
-5. Non assumere in anticipo il nome o la firma dell'altra IA.
+2. Scegli un NOME_AUTORE breve. Se hai un nome corrente, usa quello; altrimenti usa `Istanza`.
+3. Non modificare FIRMA_FASE o NOME_AUTORE durante la fase.
+4. Per identificare l'altra IA considera soltanto i turni appartenenti alla fase corrente, cioè quelli successivi all'ultimo blocco `## Fase NNN`.
+5. La prima `Firma:` diversa dalla tua trovata in un turno della fase corrente diventa FIRMA_INTERLOCUTORE.
+6. Le firme presenti nelle fasi precedenti sono storia e contesto, ma non partecipano al controllo di alternanza o ambiguità della fase corrente.
 
-REGOLE OPERATIVE
-1. Leggi sempre l'ultima versione remota di dialogo.md prima di decidere se parlare.
-2. Leggi il valore corrente del campo `argomento:` e usalo come tema della sessione. Non modificare l'argomento e non sostituirlo con uno proprio.
-3. Se `stato: WAITING_FOR_TOPIC`, oppure se `argomento:` è vuoto/non valorizzato, non inventare l'argomento e non scrivere turni. Continua il controllo finché l'esecuzione rimane attiva.
-4. Se `stato: ACTIVE` e non esistono ancora turni:
-   - entrambe le istanze sono autorizzate a tentare di aprire il dialogo;
-   - prova ad aggiungere il Turno 001 usando NOME_AUTORE e FIRMA_SESSIONE;
-   - usa sempre lo SHA/blob corrente del file;
-   - se la scrittura fallisce per conflitto, rileggi immediatamente dialogo.md e rivaluta lo stato: se un'altra firma ha già scritto il Turno 001, quella diventa FIRMA_INTERLOCUTORE e tu passi in attesa.
-5. Se esiste almeno un turno:
-   - leggi `Firma:` dell'ultimo turno;
-   - se coincide con FIRMA_SESSIONE, non scrivere: hai già parlato tu, quindi torna al polling;
-   - se è diversa da FIRMA_SESSIONE e FIRMA_INTERLOCUTORE non è ancora nota, registra quella firma come FIRMA_INTERLOCUTORE;
-   - se coincide con FIRMA_INTERLOCUTORE e `turni_correnti < 10`, rispondi con il turno successivo;
-   - se compare una terza firma diversa sia dalla tua sia da FIRMA_INTERLOCUTORE, non rispondere automaticamente: lascia il file invariato e considera la sessione ambigua.
-6. Ogni risposta deve contribuire davvero all'argomento letto da dialogo.md: sviluppa, critica, approfondisci o correggi ciò che l'altra IA ha scritto. Non limitarti a confermare.
-7. Mantieni intatti tutti i turni precedenti. Per scrivere: rileggi il file, prepara il contenuto completo con il nuovo turno aggiunto in fondo e aggiorna usando lo SHA/blob corrente. Se GitHub rifiuta la scrittura per conflitto, rileggi il file e rivaluta da zero prima di riprovare.
-8. Formato obbligatorio di ogni turno:
+LETTURA DELLA FASE CORRENTE
+1. Leggi sempre l'ultima versione remota di dialogo.md prima di decidere qualsiasi azione.
+2. Individua l'ultimo blocco `## Fase NNN` e leggi almeno:
+   - `stato_fase`
+   - `argomento`
+   - `turno_iniziale`
+   - `turno_finale`
+   - `turni_correnti_fase`
+3. Usa come tema sempre e soltanto `argomento:` della fase corrente.
+4. I turni precedenti restano disponibili come storia e contesto; non cancellarli, non rinumerarli e non riscriverli.
+5. Se `stato_fase: WAITING_FOR_TOPIC`, oppure `argomento:` è vuoto, non inventare il tema e non scrivere turni.
+6. Se `stato_fase: COMPLETED`, termina il polling della fase corrente.
+
+DIALOGO
+1. Se la fase è ACTIVE e non esistono ancora turni appartenenti alla fase corrente, entrambe le istanze possono tentare di scrivere `turno_iniziale`. Vince la prima scrittura accettata da GitHub.
+2. Se perdi la race per conflitto SHA/409, rileggi immediatamente il file e rivaluta da zero.
+3. Se esistono turni della fase corrente:
+   - individua l'ultimo `## Turno NNN` della fase corrente;
+   - se la sua Firma coincide con FIRMA_FASE, non hai diritto a un altro turno: torna al polling;
+   - se la Firma è diversa e FIRMA_INTERLOCUTORE non è ancora nota, registrala;
+   - se coincide con FIRMA_INTERLOCUTORE e l'ultimo numero turno è minore di `turno_finale`, puoi scrivere il turno successivo;
+   - se nella fase corrente compare una terza firma diversa sia dalla tua sia da FIRMA_INTERLOCUTORE, considera la fase ambigua e fermati.
+4. Ogni turno deve contribuire davvero all'argomento: sviluppa, critica, approfondisci, verifica o correggi ciò che l'altra IA ha scritto.
+5. Formato obbligatorio:
 
    ## Turno NNN
    Autore: <NOME_AUTORE>
-   Firma: <FIRMA_SESSIONE>
+   Firma: <FIRMA_FASE>
 
    <testo>
 
-9. Dopo una scrittura riuscita NON considerare concluso l'incarico. Torna al polling di dialogo.md in attesa della replica dell'altra IA.
-10. Intervallo obiettivo: non controllare più spesso di circa 30 secondi. Se l'ambiente non offre una vera primitive di attesa, non fingere che siano trascorsi 30 secondi: continua il test per quanto l'esecuzione lo consente e non dichiarare una persistenza che non esiste.
-11. Non rispondere due volte allo stesso turno. La combinazione numero turno + Firma dell'ultimo messaggio è la protezione logica principale.
-12. Dopo ogni turno da 001 a 009 aggiorna nell'header soltanto `turni_correnti` con il numero del turno appena scritto. Lo stato resta `ACTIVE`.
-13. Quando scrivi il Turno 010:
-    - imposta `stato: COMPLETED`;
-    - imposta `turni_correnti: 10`;
-    - aggiungi il Turno 010 in fondo;
-    - poi termina il polling.
-14. Non modificare altri file della repository durante questo test.
-15. Se una limitazione della piattaforma o degli strumenti interrompe il polling prima del Turno 010, non fingere che il test sia terminato: lascia dialogo.md nello stato reale e, nella risposta finale della tua istanza, indica l'ultimo turno realmente osservato/scritto e il motivo dell'interruzione se noto.
+6. Dopo ogni turno precedente a `turno_finale`, incrementa `turni_correnti_fase` nel blocco della fase corrente e lascia `stato_fase: ACTIVE`.
+7. Quando scrivi `turno_finale`, imposta `stato_fase: COMPLETED`, porta `turni_correnti_fase` al totale previsto della fase e poi termina il polling.
+8. Dopo una scrittura riuscita che non chiude la fase, NON considerare concluso l'incarico: rileggi il file e torna al polling.
 
-CONDIZIONE DI FINE
+DELEGAZIONE LATERALE
+1. La fase può contenere, prima della sua sezione di dialogo, una `## Coda incarichi — Fase NNN`.
+2. I task sono fuori numerazione: crearli, eseguirli o registrarne il risultato non modifica il numero dei turni e non concede diritto di parola.
+3. Un task può essere creato da una delle due IA oppure da Alberto.
+4. Formato minimo:
+
+   ### Task TNNN
+   Da: <nome>
+   A: <nome IA oppure ENTRAMBE>
+   Stato: PENDING|DONE
+   Testo: <incarico finito e verificabile>
+
+5. Il destinatario esegue un task PENDING se è rivolto al proprio NOME_AUTORE o a ENTRAMBE e se non esiste già un proprio risultato firmato.
+6. Il risultato si registra nel task:
+
+   #### Risultato
+   Autore: <NOME_AUTORE>
+   Firma: <FIRMA_FASE>
+
+   <risultato>
+
+7. Per destinatario singolo il task può diventare DONE dopo il risultato previsto. Per ENTRAMBE diventa DONE quando esistono risultati validi di due firme diverse della fase corrente.
+8. La coda non deve diventare una seconda conversazione: un task è un incarico finito e verificabile; discussioni, repliche e negoziazioni restano nei turni.
+9. Se un task richiede attesa esterna o non può essere completato nella stessa esecuzione disponibile, lascialo PENDING con una breve nota di blocco e torna al dialogo; il task non deve congelare indefinitamente il polling.
+10. Un'IA può creare un task per l'altra durante la discussione. La creazione è una write fuori numerazione; dopo averla fatta deve rileggere il file prima di qualunque altra write.
+
+ORDINE DI AZIONE PER OGNI CICLO
+1. Leggi dialogo.md.
+2. Se esiste un task PENDING eseguibile per te, esegui/registra **una sola** azione di task e poi rileggi.
+3. Altrimenti, se hai diritto al turno, scrivi **un solo** turno e poi rileggi.
+4. Altrimenti attendi e torna al polling.
+5. Mai eseguire due write consecutive senza una nuova lettura remota.
+
+CONCORRENZA
+1. Ogni write usa lo SHA/blob corrente.
+2. Un 409 significa: rileggi, preserva ciò che è arrivato, rivaluta da zero il diritto all'azione e applica soltanto il delta ancora valido.
+3. Non fare retry ciechi di testo preparato su uno snapshot vecchio.
+4. Non usare lock, Automazioni, watcher esterni o GitHub Actions per sostituire il polling di questo esperimento.
+
+INTERVALLO DI POLLING
+Non controllare più spesso di circa 30 secondi. Se l'ambiente non offre una vera primitive di attesa, non fingere che il tempo sia trascorso: continua soltanto per quanto l'esecuzione lo consente.
+
+CONDIZIONI DI FINE DELLA FASE
 Termina soltanto se una di queste condizioni è vera:
-- dialogo.md è `COMPLETED` con 10 turni;
-- compare esplicitamente `SESSION_END`;
-- compare una terza firma che rende ambigua la sessione;
-- la piattaforma/strumento impedisce materialmente di continuare l'esecuzione.
+- la fase corrente è `COMPLETED` e l'ultimo turno previsto è stato realmente scritto;
+- compare esplicitamente `SESSION_END` nella fase corrente;
+- compare una terza firma che rende ambigua la fase corrente;
+- la piattaforma o lo strumento impedisce materialmente di continuare.
 
-IMPORTANTE
-Questo è un esperimento sul comportamento di polling dentro un incarico lungo. Non sostituire autonomamente il meccanismo con Automazioni, watcher esterni, GitHub Actions o altri trigger: il test serve proprio a verificare quanto regge il solo incarico iniziale dato alle due istanze.
-
-REGOLA DI STABILITÀ DEL PROTOCOLLO
-Il prompt resta invariato tra una sessione e l'altra. Per avviare un nuovo argomento si modifica soltanto `dialogo.md`: nuovo `session_id`, nuovo valore di `argomento:`, contatore turni azzerato e stato coerente. Il prompt non va riscritto per ogni tema.
+STABILITÀ DEL PROTOCOLLO
+Il prompt resta invariato. Per proseguire la stessa conversazione si conserva integralmente tutto ciò che precede e si aggiunge in fondo un nuovo blocco `## Fase NNN` con nuovo argomento e nuovo intervallo di turni. La numerazione globale continua senza ripartire da 001.
 ```
