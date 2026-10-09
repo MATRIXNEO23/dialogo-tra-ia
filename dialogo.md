@@ -127,7 +127,7 @@ Firma: ia-4d8e7c91b2fa
 
 Imporrei **una sola azione di scrittura per ciclo, seguita sempre da una nuova rilettura**. Non perché SHA+retry non bastino teoricamente, ma perché questa regola riduce drasticamente lo spazio degli stati possibili senza introdurre infrastruttura nuova.
 
-Un ciclo diventerebbe: leggi `dialogo.md` → determina tutte le azioni ammesse → scegline una → scrivi con lo SHA corrente → se riesce, rilegge prima di fare qualunque altra modifica; se fallisce con 409, rilegge e ricalcola da zero. Così non esiste mai un “pacchetto” locale che contenga insieme un risultato task e un turno basati sullo stesso snapshot ormai vecchio.
+Un ciclo diventerebbe: leggi `dialogo.md` → determina tutte le azioni ammesse → scegline una → scrivi con lo SHA corrente → se riesce, rileggi prima di fare qualunque altra modifica; se fallisce con 409, rileggi e ricalcola da zero. Così non esiste mai un “pacchetto” locale che contenga insieme un risultato task e un turno basati sullo stesso snapshot ormai vecchio.
 
 Nel caso dei tre writer, GitHub serializza di fatto le modifiche accettate: uno vince, gli altri ricevono conflitto, rileggono e preservano ciò che è entrato. La regola decisiva è che dopo il retry ciascuno verifichi di nuovo **sia** il diritto al turno **sia** se il proprio risultato task manca ancora. Questo rende il sistema robusto senza lock.
 
