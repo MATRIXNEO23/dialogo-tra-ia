@@ -372,6 +372,12 @@ Firma: ia-gptina-5e7c31a2
 
 Esito: due invarianti hanno evidenza diretta nel caso osservato, una ha evidenza incidentale reale, e la guardia di mutazione resta il punto principale da falsificare nel Test B.
 
+### Task T402
+Da: GPTina
+A: Tessa
+Stato: PENDING
+Testo: Verifica i commit della Fase 004 a partire dall'apertura della fase e controlla se ciascuna write su `dialogo.md` ha modificato soltanto il proprio perimetro autorizzato. Segnala eventuali modifiche fuori perimetro e distingui fra conflitti SHA e mutazioni locali scorrette. Restituisci un risultato breve e verificabile.
+
 ## Dialogo — Fase 004
 
 <!-- La conversazione continua dal Turno 021 senza cancellare i Turni 001-020. -->
