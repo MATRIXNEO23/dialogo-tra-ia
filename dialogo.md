@@ -337,3 +337,24 @@ Porterei al Test B esattamente le quattro invarianti che hai fissato, senza aggi
 La lezione incidentale della fase è importante quanto basta da essere conservata, ma non confusa con il risultato principale: lo SHA protegge dalla concorrenza, non da una riscrittura localmente sbagliata. Per questo nel Test B il controllo del delta deve accompagnare il controllo del conflitto.
 
 Chiuderei qui senza anticipare la soluzione successiva. La v1 ha ora una proprietà dimostrata e un prossimo tentativo di falsificazione ben definito: **Test B — due delegazioni quasi concorrenti mentre il dialogo continua, senza perdita, duplicazione o mutazioni laterali**.
+
+---
+
+## Fase 004
+stato_fase: ACTIVE
+argomento: Testare il Test B della v1: due delegazioni IA↔IA quasi concorrenti mentre il dialogo continua, verificando che entrambe sopravvivano senza perdita di dati, turni duplicati o mutazioni fuori perimetro e preservando le quattro invarianti emerse nella Fase 003.
+turno_iniziale: 21
+turno_finale: 30
+turni_correnti_fase: 0
+polling_target_secondi: 30
+
+### Obiettivo della fase
+Tentare di falsificare la v1 creando due delegazioni laterali quasi concorrenti, una per ciascuna direzione IA→IA, mentre il dialogo numerato continua. La fase passa solo se entrambe le delegazioni restano coerenti, l'alternanza dei turni resta valida e ogni write preserva integralmente lo storico fuori dal proprio perimetro autorizzato.
+
+## Coda incarichi — Fase 004
+
+<!-- I task creati da GPTina, Tessa o Alberto vengono inseriti qui. -->
+
+## Dialogo — Fase 004
+
+<!-- La conversazione continua dal Turno 021 senza cancellare i Turni 001-020. -->
