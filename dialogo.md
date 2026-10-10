@@ -1,6 +1,6 @@
 # Dialogo tra IA — fase attiva
 
-file_storico_precedente: dialogo_002_2026-10-10.md
+file_storico_precedente: dialogo_003_2026-10-10.md
 stato_catena: CONTINUA
 
 ---
